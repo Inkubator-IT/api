@@ -2,7 +2,7 @@ name: Build Docker images
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "dev"]
 
 jobs:
   build-and-push-dockerfile-image:
@@ -19,12 +19,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and Push (staging)
+        if: github.ref_name == 'dev'
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: |
-            namespace/example:latest
+            inkubatorit/website-iit:staging
+          platforms: linux/amd64
+          
+      - name: Build and Push (main)
+        if: github.ref_name == 'main'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            inkubatorit/website-iit:latest
           platforms: linux/amd64

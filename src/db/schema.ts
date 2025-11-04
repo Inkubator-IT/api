@@ -1,9 +1,9 @@
 import { sql } from "./index";
 
 export async function createTables(): Promise<void> {
-	try {
-		// Create tags table
-		await sql`
+  try {
+    // Create tags table
+    await sql`
 			CREATE TABLE IF NOT EXISTS tags (
 				tag_id SERIAL PRIMARY KEY,
 				tag_name VARCHAR(255) NOT NULL UNIQUE,
@@ -13,8 +13,8 @@ export async function createTables(): Promise<void> {
 			)
 		`;
 
-		// Create tech_stack table
-		await sql`
+    // Create tech_stack table
+    await sql`
 			CREATE TABLE IF NOT EXISTS tech_stack (
 				tech_stack_id SERIAL PRIMARY KEY,
 				tech_stack_name VARCHAR(255) NOT NULL UNIQUE,
@@ -24,8 +24,8 @@ export async function createTables(): Promise<void> {
 			)
 		`;
 
-		// Create services table
-		await sql`
+    // Create services table
+    await sql`
 			CREATE TABLE IF NOT EXISTS services (
 				service_id SERIAL PRIMARY KEY,
 				service_name VARCHAR(255) NOT NULL UNIQUE,
@@ -35,8 +35,8 @@ export async function createTables(): Promise<void> {
 			)
 		`;
 
-		// Create projects table
-		await sql`
+    // Create projects table
+    await sql`
 			CREATE TABLE IF NOT EXISTS projects (
 				id SERIAL PRIMARY KEY,
 				title VARCHAR(255) NOT NULL,
@@ -51,8 +51,8 @@ export async function createTables(): Promise<void> {
 			)
 		`;
 
-		// Create blogs table
-		await sql`
+    // Create blogs table
+    await sql`
 			CREATE TABLE IF NOT EXISTS blogs (
 				id SERIAL PRIMARY KEY,
 				title VARCHAR(255) NOT NULL,
@@ -61,14 +61,15 @@ export async function createTables(): Promise<void> {
 				excerpt TEXT,
 				thumbnail VARCHAR(500),
 				content JSONB,
+				time_read VARCHAR(50),
 				tag_id INTEGER REFERENCES tags(tag_id),
 				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 			)
 		`;
 
-		// Create client_information table
-		await sql`
+    // Create client_information table
+    await sql`
 			CREATE TABLE IF NOT EXISTS client_information (
 				id SERIAL PRIMARY KEY,
 				nama_lengkap VARCHAR(255) NOT NULL,
@@ -92,31 +93,31 @@ export async function createTables(): Promise<void> {
 			)
 		`;
 
-		// Create indexes for better performance
-		await sql`CREATE INDEX IF NOT EXISTS idx_projects_tag_id ON projects(tag_id)`;
-		await sql`CREATE INDEX IF NOT EXISTS idx_projects_tech_stack_id ON projects(tech_stack_id)`;
-		await sql`CREATE INDEX IF NOT EXISTS idx_blogs_tag_id ON blogs(tag_id)`;
-		await sql`CREATE INDEX IF NOT EXISTS idx_blogs_slug ON blogs(slug)`;
-		await sql`CREATE INDEX IF NOT EXISTS idx_client_info_email ON client_information(email)`;
+    // Create indexes for better performance
+    await sql`CREATE INDEX IF NOT EXISTS idx_projects_tag_id ON projects(tag_id)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_projects_tech_stack_id ON projects(tech_stack_id)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_blogs_tag_id ON blogs(tag_id)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_blogs_slug ON blogs(slug)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_client_info_email ON client_information(email)`;
 
-		console.log("Database tables created successfully");
-	} catch (error) {
-		console.error("Error creating tables:", error);
-		throw error;
-	}
+    console.log("Database tables created successfully");
+  } catch (error) {
+    console.error("Error creating tables:", error);
+    throw error;
+  }
 }
 
 export async function dropTables(): Promise<void> {
-	try {
-		await sql`DROP TABLE IF EXISTS client_information CASCADE`;
-		await sql`DROP TABLE IF EXISTS blogs CASCADE`;
-		await sql`DROP TABLE IF EXISTS projects CASCADE`;
-		await sql`DROP TABLE IF EXISTS services CASCADE`;
-		await sql`DROP TABLE IF EXISTS tech_stack CASCADE`;
-		await sql`DROP TABLE IF EXISTS tags CASCADE`;
-		console.log("Database tables dropped successfully");
-	} catch (error) {
-		console.error("Error dropping tables:", error);
-		throw error;
-	}
+  try {
+    await sql`DROP TABLE IF EXISTS client_information CASCADE`;
+    await sql`DROP TABLE IF EXISTS blogs CASCADE`;
+    await sql`DROP TABLE IF EXISTS projects CASCADE`;
+    await sql`DROP TABLE IF EXISTS services CASCADE`;
+    await sql`DROP TABLE IF EXISTS tech_stack CASCADE`;
+    await sql`DROP TABLE IF EXISTS tags CASCADE`;
+    console.log("Database tables dropped successfully");
+  } catch (error) {
+    console.error("Error dropping tables:", error);
+    throw error;
+  }
 }

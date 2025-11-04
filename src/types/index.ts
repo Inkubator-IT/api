@@ -44,6 +44,11 @@ export interface Blog {
 	content: ContentBlock[]; // Structured content blocks
 	time_read: string;
 	tag_id: number;
+	tag?: {
+		tag_id: number;
+		tag_name: string;
+		tag_description: string;
+	};
 	created_at: Date;
 	updated_at: Date;
 }

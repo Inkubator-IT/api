@@ -3,16 +3,49 @@ import type { Blog, CreateBlogRequest } from "../types";
 
 export class BlogsRepository {
 	static async findAll(): Promise<Blog[]> {
-		return await sql<Blog[]>`SELECT * FROM blogs ORDER BY created_at DESC`;
+		return await sql<Blog[]>`
+			SELECT 
+				b.*,
+				json_build_object(
+					'tag_id', t.tag_id,
+					'tag_name', t.tag_name,
+					'tag_description', t.tag_description
+				) as tag
+			FROM blogs b
+			LEFT JOIN tags t ON b.tag_id = t.tag_id
+			ORDER BY b.created_at DESC
+		`;
 	}
 
 	static async findById(id: number): Promise<Blog | null> {
-		const result = await sql<Blog[]>`SELECT * FROM blogs WHERE id = ${id}`;
+		const result = await sql<Blog[]>`
+			SELECT 
+				b.*,
+				json_build_object(
+					'tag_id', t.tag_id,
+					'tag_name', t.tag_name,
+					'tag_description', t.tag_description
+				) as tag
+			FROM blogs b
+			LEFT JOIN tags t ON b.tag_id = t.tag_id
+			WHERE b.id = ${id}
+		`;
 		return result[0] || null;
 	}
 
 	static async findBySlug(slug: string): Promise<Blog | null> {
-		const result = await sql<Blog[]>`SELECT * FROM blogs WHERE slug = ${slug}`;
+		const result = await sql<Blog[]>`
+			SELECT 
+				b.*,
+				json_build_object(
+					'tag_id', t.tag_id,
+					'tag_name', t.tag_name,
+					'tag_description', t.tag_description
+				) as tag
+			FROM blogs b
+			LEFT JOIN tags t ON b.tag_id = t.tag_id
+			WHERE b.slug = ${slug}
+		`;
 		return result[0] || null;
 	}
 

@@ -19,7 +19,7 @@ export class BlogsRepository {
 	static async create(data: CreateBlogRequest): Promise<Blog> {
 		const result = await sql<Blog[]>`
 			INSERT INTO blogs (title, author, slug, excerpt, thumbnail, content, tag_id)
-			VALUES (${data.title}, ${data.author}, ${data.slug}, ${data.excerpt}, ${data.thumbnail}, ${data.content}, ${data.tag_id})
+			VALUES (${data.title}, ${data.author}, ${data.slug}, ${data.excerpt}, ${data.thumbnail}, ${sql.json(data.content)}, ${data.tag_id})
 			RETURNING *
 		`;
 		return result[0];
@@ -36,7 +36,7 @@ export class BlogsRepository {
 				slug = COALESCE(${data.slug}, slug),
 				excerpt = COALESCE(${data.excerpt}, excerpt),
 				thumbnail = COALESCE(${data.thumbnail}, thumbnail),
-				content = COALESCE(${data.content}, content),
+				content = COALESCE(${data.content ? sql.json(data.content) : null}, content),
 				tag_id = COALESCE(${data.tag_id}, tag_id),
 				updated_at = CURRENT_TIMESTAMP
 			WHERE id = ${id}

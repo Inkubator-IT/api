@@ -27,6 +27,13 @@ export interface TechStack {
 	updated_at: Date;
 }
 
+export type ContentBlockType = "paragraph" | "header" | "quote";
+
+export interface ContentBlock {
+	type: ContentBlockType;
+	text: string;
+}
+
 export interface Blog {
 	id: number;
 	title: string;
@@ -34,7 +41,7 @@ export interface Blog {
 	slug: string;
 	excerpt: string;
 	thumbnail: string;
-	content: string; // HTML content from rich text editor
+	content: ContentBlock[]; // Structured content blocks
 	tag_id: number;
 	created_at: Date;
 	updated_at: Date;
@@ -97,7 +104,7 @@ export interface CreateBlogRequest {
 	slug: string;
 	excerpt: string;
 	thumbnail: string;
-	content: string;
+	content: ContentBlock[];
 	tag_id: number;
 }
 

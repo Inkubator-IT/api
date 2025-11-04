@@ -30,7 +30,11 @@ export class BlogsService {
 		if (!data.slug || data.slug.trim().length === 0) {
 			throw new Error("Blog slug is required");
 		}
-		if (!data.content || data.content.trim().length === 0) {
+		if (
+			!data.content ||
+			!Array.isArray(data.content) ||
+			data.content.length === 0
+		) {
 			throw new Error("Blog content is required");
 		}
 		return await BlogsRepository.create(data);

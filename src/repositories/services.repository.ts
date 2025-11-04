@@ -7,7 +7,9 @@ export class ServicesRepository {
 	}
 
 	static async findById(serviceId: number): Promise<Service | null> {
-		const result = await sql<Service[]>`SELECT * FROM services WHERE service_id = ${serviceId}`;
+		const result = await sql<
+			Service[]
+		>`SELECT * FROM services WHERE service_id = ${serviceId}`;
 		return result[0] || null;
 	}
 
@@ -20,7 +22,10 @@ export class ServicesRepository {
 		return result[0];
 	}
 
-	static async update(serviceId: number, data: Partial<CreateServiceRequest>): Promise<Service | null> {
+	static async update(
+		serviceId: number,
+		data: Partial<CreateServiceRequest>,
+	): Promise<Service | null> {
 		const result = await sql<Service[]>`
 			UPDATE services 
 			SET service_name = COALESCE(${data.service_name}, service_name),
@@ -33,7 +38,8 @@ export class ServicesRepository {
 	}
 
 	static async delete(serviceId: number): Promise<boolean> {
-		const result = await sql`DELETE FROM services WHERE service_id = ${serviceId}`;
+		const result =
+			await sql`DELETE FROM services WHERE service_id = ${serviceId}`;
 		return result.count > 0;
 	}
 }

@@ -25,7 +25,10 @@ export class BlogsRepository {
 		return result[0];
 	}
 
-	static async update(id: number, data: Partial<CreateBlogRequest>): Promise<Blog | null> {
+	static async update(
+		id: number,
+		data: Partial<CreateBlogRequest>,
+	): Promise<Blog | null> {
 		const result = await sql<Blog[]>`
 			UPDATE blogs 
 			SET title = COALESCE(${data.title}, title),

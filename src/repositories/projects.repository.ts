@@ -3,11 +3,15 @@ import type { Project, CreateProjectRequest } from "../types";
 
 export class ProjectsRepository {
 	static async findAll(): Promise<Project[]> {
-		return await sql<Project[]>`SELECT * FROM projects ORDER BY created_at DESC`;
+		return await sql<
+			Project[]
+		>`SELECT * FROM projects ORDER BY created_at DESC`;
 	}
 
 	static async findById(id: number): Promise<Project | null> {
-		const result = await sql<Project[]>`SELECT * FROM projects WHERE id = ${id}`;
+		const result = await sql<
+			Project[]
+		>`SELECT * FROM projects WHERE id = ${id}`;
 		return result[0] || null;
 	}
 
@@ -20,7 +24,10 @@ export class ProjectsRepository {
 		return result[0];
 	}
 
-	static async update(id: number, data: Partial<CreateProjectRequest>): Promise<Project | null> {
+	static async update(
+		id: number,
+		data: Partial<CreateProjectRequest>,
+	): Promise<Project | null> {
 		const result = await sql<Project[]>`
 			UPDATE projects 
 			SET title = COALESCE(${data.title}, title),

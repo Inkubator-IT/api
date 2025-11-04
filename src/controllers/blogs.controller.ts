@@ -8,7 +8,13 @@ export class BlogsController {
 			const blogs = await BlogsService.getAllBlogs();
 			return c.json({ success: true, data: blogs });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
@@ -21,7 +27,13 @@ export class BlogsController {
 			}
 			return c.json({ success: true, data: blog });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
@@ -34,31 +46,49 @@ export class BlogsController {
 			}
 			return c.json({ success: true, data: blog });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
 	static async createBlog(c: Context) {
 		try {
-			const data = await c.req.json() as CreateBlogRequest;
+			const data = (await c.req.json()) as CreateBlogRequest;
 			const blog = await BlogsService.createBlog(data);
 			return c.json({ success: true, data: blog }, 201);
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
 	static async updateBlog(c: Context) {
 		try {
 			const id = parseInt(c.req.param("id"), 10);
-			const data = await c.req.json() as Partial<CreateBlogRequest>;
+			const data = (await c.req.json()) as Partial<CreateBlogRequest>;
 			const blog = await BlogsService.updateBlog(id, data);
 			if (!blog) {
 				return c.json({ success: false, error: "Blog not found" }, 404);
 			}
 			return c.json({ success: true, data: blog });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
@@ -71,7 +101,13 @@ export class BlogsController {
 			}
 			return c.json({ success: true, message: "Blog deleted successfully" });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 }

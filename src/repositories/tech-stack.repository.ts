@@ -3,11 +3,15 @@ import type { TechStack, CreateTechStackRequest } from "../types";
 
 export class TechStackRepository {
 	static async findAll(): Promise<TechStack[]> {
-		return await sql<TechStack[]>`SELECT * FROM tech_stack ORDER BY tech_stack_name`;
+		return await sql<
+			TechStack[]
+		>`SELECT * FROM tech_stack ORDER BY tech_stack_name`;
 	}
 
 	static async findById(techStackId: number): Promise<TechStack | null> {
-		const result = await sql<TechStack[]>`SELECT * FROM tech_stack WHERE tech_stack_id = ${techStackId}`;
+		const result = await sql<
+			TechStack[]
+		>`SELECT * FROM tech_stack WHERE tech_stack_id = ${techStackId}`;
 		return result[0] || null;
 	}
 
@@ -20,7 +24,10 @@ export class TechStackRepository {
 		return result[0];
 	}
 
-	static async update(techStackId: number, data: Partial<CreateTechStackRequest>): Promise<TechStack | null> {
+	static async update(
+		techStackId: number,
+		data: Partial<CreateTechStackRequest>,
+	): Promise<TechStack | null> {
 		const result = await sql<TechStack[]>`
 			UPDATE tech_stack 
 			SET tech_stack_name = COALESCE(${data.tech_stack_name}, tech_stack_name),
@@ -33,7 +40,8 @@ export class TechStackRepository {
 	}
 
 	static async delete(techStackId: number): Promise<boolean> {
-		const result = await sql`DELETE FROM tech_stack WHERE tech_stack_id = ${techStackId}`;
+		const result =
+			await sql`DELETE FROM tech_stack WHERE tech_stack_id = ${techStackId}`;
 		return result.count > 0;
 	}
 }

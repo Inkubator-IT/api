@@ -1,6 +1,7 @@
 import postgres from "postgres";
 
-const connectionString = Bun.env.DATABASE_URL || "postgresql://myuser:mypassword@localhost:5432/mydb";
+const connectionString =
+	Bun.env.DATABASE_URL || "postgresql://myuser:mypassword@localhost:5432/mydb";
 
 export const sql = postgres(connectionString, {
 	host: Bun.env.DB_HOST || "localhost",

@@ -23,7 +23,10 @@ export class ProjectsService {
 		return await ProjectsRepository.create(data);
 	}
 
-	static async updateProject(id: number, data: Partial<CreateProjectRequest>): Promise<Project | null> {
+	static async updateProject(
+		id: number,
+		data: Partial<CreateProjectRequest>,
+	): Promise<Project | null> {
 		if (!id || id <= 0) {
 			throw new Error("Invalid project ID");
 		}

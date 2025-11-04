@@ -20,7 +20,10 @@ export class ServicesService {
 		return await ServicesRepository.create(data);
 	}
 
-	static async updateService(serviceId: number, data: Partial<CreateServiceRequest>): Promise<Service | null> {
+	static async updateService(
+		serviceId: number,
+		data: Partial<CreateServiceRequest>,
+	): Promise<Service | null> {
 		if (!serviceId || serviceId <= 0) {
 			throw new Error("Invalid service ID");
 		}

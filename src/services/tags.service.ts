@@ -20,7 +20,10 @@ export class TagsService {
 		return await TagsRepository.create(data);
 	}
 
-	static async updateTag(tagId: number, data: Partial<CreateTagRequest>): Promise<Tag | null> {
+	static async updateTag(
+		tagId: number,
+		data: Partial<CreateTagRequest>,
+	): Promise<Tag | null> {
 		if (!tagId || tagId <= 0) {
 			throw new Error("Invalid tag ID");
 		}

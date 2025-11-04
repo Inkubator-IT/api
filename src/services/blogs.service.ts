@@ -36,7 +36,10 @@ export class BlogsService {
 		return await BlogsRepository.create(data);
 	}
 
-	static async updateBlog(id: number, data: Partial<CreateBlogRequest>): Promise<Blog | null> {
+	static async updateBlog(
+		id: number,
+		data: Partial<CreateBlogRequest>,
+	): Promise<Blog | null> {
 		if (!id || id <= 0) {
 			throw new Error("Invalid blog ID");
 		}

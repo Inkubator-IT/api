@@ -59,7 +59,7 @@ export async function createTables(): Promise<void> {
 				author VARCHAR(255) NOT NULL,
 				slug VARCHAR(255) NOT NULL UNIQUE,
 				excerpt TEXT,
-				thumbnail VARCHAR(500),
+				thumbnail TEXT,
 				content JSONB,
 				time_read VARCHAR(50),
 				tag_id INTEGER REFERENCES tags(tag_id),

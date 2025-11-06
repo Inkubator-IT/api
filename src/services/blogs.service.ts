@@ -30,12 +30,11 @@ export class BlogsService {
 		if (!data.slug || data.slug.trim().length === 0) {
 			throw new Error("Blog slug is required");
 		}
-		if (
-			!data.content ||
-			!Array.isArray(data.content) ||
-			data.content.length === 0
-		) {
-			throw new Error("Blog content is required");
+		if (!data.content || data.content.type !== "doc" || !Array.isArray(data.content.content)) {
+			throw new Error("Blog content must be valid TipTap JSON format");
+		}
+		if (data.content.content.length === 0) {
+			throw new Error("Blog content cannot be empty");
 		}
 		return await BlogsRepository.create(data);
 	}

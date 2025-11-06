@@ -72,6 +72,6 @@ async function initializeDatabase() {
 initializeDatabase();
 
 export default {
-	port: Bun.env.APP_PORT || 3000,
+	port: Bun.env.APP_PORT || 4000,
 	fetch: app.fetch,
 };

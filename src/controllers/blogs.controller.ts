@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { BlogsService } from "../services";
 import type { CreateBlogRequest } from "../types";
+import { generateBlogJsonLd } from "../utils/generateJsonLd";
 
 export class BlogsController {
 	static async getAllBlogs(c: Context) {
@@ -25,7 +26,11 @@ export class BlogsController {
 			if (!blog) {
 				return c.json({ success: false, error: "Blog not found" }, 404);
 			}
-			return c.json({ success: true, data: blog });
+
+			const baseUrl = process.env.BASE_URL || 'https://localhost:3000';
+			const jsonLd = generateBlogJsonLd(blog, baseUrl);
+
+			return c.json({ success: true, data: blog, jsonLd: jsonLd });
 		} catch (error) {
 			return c.json(
 				{
@@ -41,10 +46,15 @@ export class BlogsController {
 		try {
 			const slug = c.req.param("slug");
 			const blog = await BlogsService.getBlogBySlug(slug);
+			
 			if (!blog) {
 				return c.json({ success: false, error: "Blog not found" }, 404);
 			}
-			return c.json({ success: true, data: blog });
+
+			const baseUrl = process.env.BASE_URL || "https://localhost:3000";
+			const jsonLd = generateBlogJsonLd(blog, baseUrl);
+
+			return c.json({ success: true, data: blog, jsonLd: jsonLd });
 		} catch (error) {
 			return c.json(
 				{

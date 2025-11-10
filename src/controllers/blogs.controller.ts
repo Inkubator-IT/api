@@ -120,4 +120,73 @@ export class BlogsController {
 			);
 		}
 	}
+
+	static async getLikeInfo(c: Context) {
+		try {
+			const id = parseInt(c.req.param("id"), 10);
+			const userIdentifier = c.req.header("X-User-Identifier") || "";
+
+			if (!userIdentifier) {
+					return c.json({ 
+						success: false,
+						error: "User identifier is required"
+					}, 
+					400,
+				);
+			}
+
+			const [count, liked] = await Promise.all([
+				BlogsService.getLikeCount(id),
+				BlogsService.hasLiked(id, userIdentifier),
+			]);
+
+			return c.json({
+				success: true,
+				data: { count, liked },
+			}, 200);
+		} catch (error) {
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
+		}
+	}
+
+	static async toggleLike(c: Context) {
+		try {
+			const id = parseInt(c.req.param("id"), 10);
+			const body = (await c.req.json()) as { userIdentifier: string };
+			const userIdentifier = body.userIdentifier || "" ;
+
+			if (!userIdentifier) {
+					return c.json({ 
+						success: false, 
+						error: "User identifier is required" 
+					}, 
+					400,
+				);
+			}
+
+			const result = await BlogsService.toggleLike(id, userIdentifier);
+
+			return c.json(
+				{
+				success: true,
+				data: result,
+				},
+				200,
+			);
+		} catch (error) {
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
+		}
+	}
 }

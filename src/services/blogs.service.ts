@@ -55,4 +55,32 @@ export class BlogsService {
 		}
 		return await BlogsRepository.delete(id);
 	}
+
+	static async getLikeCount(blogId: number): Promise<number> {
+		if (!blogId || blogId <= 0) {
+			throw new Error("Invalid blog ID");
+		}
+		return await BlogsRepository.getLikeCount(blogId);
+	}
+
+
+	static async hasLiked(blogId: number, userIdentifier: string): Promise<boolean> {
+		if (!blogId || blogId <= 0) {
+			throw new Error("Invalid blog ID");
+		}
+		if (!userIdentifier || userIdentifier.trim().length === 0) {
+			throw new Error("User identifier is required");
+		}
+		return await BlogsRepository.hasLiked(blogId, userIdentifier);
+	}
+
+	static async toggleLike(blogId: number, userIdentifier: string): Promise<{ liked: boolean; count: number }> {
+		if (!blogId || blogId <= 0) {
+			throw new Error("Invalid blog ID");
+		}
+		if (!userIdentifier || userIdentifier.trim().length === 0) {
+			throw new Error("User identifier is required");
+		}
+		return await BlogsRepository.toggleLike(blogId, userIdentifier);
+	}
 }

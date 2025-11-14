@@ -19,10 +19,10 @@ app.use("*", logger());
 
 // Health check endpoint
 app.get("/", (c) => {
-	return c.json({ 
-		success: true, 
+	return c.json({
+		success: true,
 		message: "IIT API Server is running!",
-		timestamp: new Date().toISOString()
+		timestamp: new Date().toISOString(),
 	});
 });
 
@@ -30,17 +30,20 @@ app.get("/", (c) => {
 app.get("/health", async (c) => {
 	try {
 		const isConnected = await testConnection();
-		return c.json({ 
-			success: true, 
+		return c.json({
+			success: true,
 			database: isConnected ? "connected" : "disconnected",
-			timestamp: new Date().toISOString()
+			timestamp: new Date().toISOString(),
 		});
 	} catch (_error) {
-		return c.json({ 
-			success: false, 
-			error: "Database connection failed",
-			timestamp: new Date().toISOString()
-		}, 500);
+		return c.json(
+			{
+				success: false,
+				error: "Database connection failed",
+				timestamp: new Date().toISOString(),
+			},
+			500,
+		);
 	}
 });
 
@@ -69,6 +72,6 @@ async function initializeDatabase() {
 initializeDatabase();
 
 export default {
-	port: Bun.env.APP_PORT || 3000,
+	port: Bun.env.APP_PORT || 4000,
 	fetch: app.fetch,
 };

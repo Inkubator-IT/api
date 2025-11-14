@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { BlogsService } from "../services";
 import type { CreateBlogRequest } from "../types";
+import { generateBlogJsonLd } from "../utils/generateJsonLd";
 
 export class BlogsController {
 	static async getAllBlogs(c: Context) {
@@ -8,7 +9,13 @@ export class BlogsController {
 			const blogs = await BlogsService.getAllBlogs();
 			return c.json({ success: true, data: blogs });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
@@ -19,9 +26,19 @@ export class BlogsController {
 			if (!blog) {
 				return c.json({ success: false, error: "Blog not found" }, 404);
 			}
-			return c.json({ success: true, data: blog });
+
+			const baseUrl = process.env.BASE_URL || 'https://localhost:3000';
+			const jsonLd = generateBlogJsonLd(blog, baseUrl);
+
+			return c.json({ success: true, data: blog, jsonLd: jsonLd });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
@@ -29,36 +46,59 @@ export class BlogsController {
 		try {
 			const slug = c.req.param("slug");
 			const blog = await BlogsService.getBlogBySlug(slug);
+			
 			if (!blog) {
 				return c.json({ success: false, error: "Blog not found" }, 404);
 			}
-			return c.json({ success: true, data: blog });
+
+			const baseUrl = process.env.BASE_URL || "https://localhost:3000";
+			const jsonLd = generateBlogJsonLd(blog, baseUrl);
+
+			return c.json({ success: true, data: blog, jsonLd: jsonLd });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
 	static async createBlog(c: Context) {
 		try {
-			const data = await c.req.json() as CreateBlogRequest;
+			const data = (await c.req.json()) as CreateBlogRequest;
 			const blog = await BlogsService.createBlog(data);
 			return c.json({ success: true, data: blog }, 201);
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
 	static async updateBlog(c: Context) {
 		try {
 			const id = parseInt(c.req.param("id"), 10);
-			const data = await c.req.json() as Partial<CreateBlogRequest>;
+			const data = (await c.req.json()) as Partial<CreateBlogRequest>;
 			const blog = await BlogsService.updateBlog(id, data);
 			if (!blog) {
 				return c.json({ success: false, error: "Blog not found" }, 404);
 			}
 			return c.json({ success: true, data: blog });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
@@ -71,7 +111,82 @@ export class BlogsController {
 			}
 			return c.json({ success: true, message: "Blog deleted successfully" });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
+		}
+	}
+
+	static async getLikeInfo(c: Context) {
+		try {
+			const id = parseInt(c.req.param("id"), 10);
+			const userIdentifier = c.req.header("X-User-Identifier") || "";
+
+			if (!userIdentifier) {
+					return c.json({ 
+						success: false,
+						error: "User identifier is required"
+					}, 
+					400,
+				);
+			}
+
+			const [count, liked] = await Promise.all([
+				BlogsService.getLikeCount(id),
+				BlogsService.hasLiked(id, userIdentifier),
+			]);
+
+			return c.json({
+				success: true,
+				data: { count, liked },
+			}, 200);
+		} catch (error) {
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
+		}
+	}
+
+	static async toggleLike(c: Context) {
+		try {
+			const id = parseInt(c.req.param("id"), 10);
+			const body = (await c.req.json()) as { userIdentifier: string };
+			const userIdentifier = body.userIdentifier || "" ;
+
+			if (!userIdentifier) {
+					return c.json({ 
+						success: false, 
+						error: "User identifier is required" 
+					}, 
+					400,
+				);
+			}
+
+			const result = await BlogsService.toggleLike(id, userIdentifier);
+
+			return c.json(
+				{
+				success: true,
+				data: result,
+				},
+				200,
+			);
+		} catch (error) {
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 }

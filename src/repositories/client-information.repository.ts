@@ -1,17 +1,26 @@
 import { sql } from "../db";
-import type { ClientInformation, CreateClientInformationRequest } from "../types";
+import type {
+	ClientInformation,
+	CreateClientInformationRequest,
+} from "../types";
 
 export class ClientInformationRepository {
 	static async findAll(): Promise<ClientInformation[]> {
-		return await sql<ClientInformation[]>`SELECT * FROM client_information ORDER BY created_at DESC`;
+		return await sql<
+			ClientInformation[]
+		>`SELECT * FROM client_information ORDER BY created_at DESC`;
 	}
 
 	static async findById(id: number): Promise<ClientInformation | null> {
-		const result = await sql<ClientInformation[]>`SELECT * FROM client_information WHERE id = ${id}`;
+		const result = await sql<
+			ClientInformation[]
+		>`SELECT * FROM client_information WHERE id = ${id}`;
 		return result[0] || null;
 	}
 
-	static async create(data: CreateClientInformationRequest): Promise<ClientInformation> {
+	static async create(
+		data: CreateClientInformationRequest,
+	): Promise<ClientInformation> {
 		const result = await sql<ClientInformation[]>`
 			INSERT INTO client_information (
 				nama_lengkap, email, no_whatsapp, instansi, civitas_itb, jenis_proyek,
@@ -30,7 +39,10 @@ export class ClientInformationRepository {
 		return result[0];
 	}
 
-	static async update(id: number, data: Partial<CreateClientInformationRequest>): Promise<ClientInformation | null> {
+	static async update(
+		id: number,
+		data: Partial<CreateClientInformationRequest>,
+	): Promise<ClientInformation | null> {
 		const result = await sql<ClientInformation[]>`
 			UPDATE client_information 
 			SET nama_lengkap = COALESCE(${data.nama_lengkap}, nama_lengkap),

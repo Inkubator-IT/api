@@ -73,11 +73,23 @@ export async function createTables(): Promise<void> {
 				author VARCHAR(255) NOT NULL,
 				slug VARCHAR(255) NOT NULL UNIQUE,
 				excerpt TEXT,
-				thumbnail VARCHAR(500),
-				content TEXT,
+				thumbnail TEXT,
+				content JSONB,
+				time_read VARCHAR(50),
 				tag_id INTEGER REFERENCES tags(tag_id),
 				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)
+		`;
+
+    // Create blog_like table
+    await sql`
+			CREATE TABLE IF NOT EXISTS blog_likes (
+				id SERIAL PRIMARY KEY,
+				blog_id INTEGER NOT NULL REFERENCES blogs(id) ON DELETE CASCADE,
+				user_identifier VARCHAR(255) NOT NULL,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				UNIQUE(blog_id, user_identifier)
 			)
 		`;
 
@@ -113,6 +125,7 @@ export async function createTables(): Promise<void> {
     await sql`CREATE INDEX IF NOT EXISTS idx_blogs_tag_id ON blogs(tag_id)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_blogs_slug ON blogs(slug)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_client_info_email ON client_information(email)`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_blog_likes_blog_id ON blog_likes(blog_id)`;
 
     console.log("Database tables created successfully");
   } catch (error) {

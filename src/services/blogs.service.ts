@@ -30,13 +30,19 @@ export class BlogsService {
 		if (!data.slug || data.slug.trim().length === 0) {
 			throw new Error("Blog slug is required");
 		}
-		if (!data.content || data.content.trim().length === 0) {
-			throw new Error("Blog content is required");
+		if (!data.content || data.content.type !== "doc" || !Array.isArray(data.content.content)) {
+			throw new Error("Blog content must be valid TipTap JSON format");
+		}
+		if (data.content.content.length === 0) {
+			throw new Error("Blog content cannot be empty");
 		}
 		return await BlogsRepository.create(data);
 	}
 
-	static async updateBlog(id: number, data: Partial<CreateBlogRequest>): Promise<Blog | null> {
+	static async updateBlog(
+		id: number,
+		data: Partial<CreateBlogRequest>,
+	): Promise<Blog | null> {
 		if (!id || id <= 0) {
 			throw new Error("Invalid blog ID");
 		}
@@ -48,5 +54,33 @@ export class BlogsService {
 			throw new Error("Invalid blog ID");
 		}
 		return await BlogsRepository.delete(id);
+	}
+
+	static async getLikeCount(blogId: number): Promise<number> {
+		if (!blogId || blogId <= 0) {
+			throw new Error("Invalid blog ID");
+		}
+		return await BlogsRepository.getLikeCount(blogId);
+	}
+
+
+	static async hasLiked(blogId: number, userIdentifier: string): Promise<boolean> {
+		if (!blogId || blogId <= 0) {
+			throw new Error("Invalid blog ID");
+		}
+		if (!userIdentifier || userIdentifier.trim().length === 0) {
+			throw new Error("User identifier is required");
+		}
+		return await BlogsRepository.hasLiked(blogId, userIdentifier);
+	}
+
+	static async toggleLike(blogId: number, userIdentifier: string): Promise<{ liked: boolean; count: number }> {
+		if (!blogId || blogId <= 0) {
+			throw new Error("Invalid blog ID");
+		}
+		if (!userIdentifier || userIdentifier.trim().length === 0) {
+			throw new Error("User identifier is required");
+		}
+		return await BlogsRepository.toggleLike(blogId, userIdentifier);
 	}
 }

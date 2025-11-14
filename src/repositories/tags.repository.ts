@@ -20,7 +20,10 @@ export class TagsRepository {
 		return result[0];
 	}
 
-	static async update(tagId: number, data: Partial<CreateTagRequest>): Promise<Tag | null> {
+	static async update(
+		tagId: number,
+		data: Partial<CreateTagRequest>,
+	): Promise<Tag | null> {
 		const result = await sql<Tag[]>`
 			UPDATE tags 
 			SET tag_name = COALESCE(${data.tag_name}, tag_name),

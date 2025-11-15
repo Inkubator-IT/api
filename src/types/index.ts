@@ -34,16 +34,23 @@ export interface TechStack {
 }
 
 export interface Blog {
-  id: number;
-  title: string;
-  author: string;
-  slug: string;
-  excerpt: string;
-  thumbnail: string;
-  content: string; // HTML content from rich text editor
-  tag_id: number;
-  created_at: Date;
-  updated_at: Date;
+	id: number;
+	title: string;
+	author: string;
+	slug: string;
+	excerpt: string;
+	thumbnail: string;
+	content: TipTapJSON;
+	time_read: string;
+	tag_id: number;
+	like_count?: number;
+	tag?: {
+		tag_id: number;
+		tag_name: string;
+		tag_description: string;
+	};
+	created_at: Date;
+	updated_at: Date;
 }
 
 export interface Service {
@@ -104,13 +111,14 @@ export interface CreateTechStackRequest {
 }
 
 export interface CreateBlogRequest {
-  title: string;
-  author: string;
-  slug: string;
-  excerpt: string;
-  thumbnail: string;
-  content: string;
-  tag_id: number;
+	title: string;
+	author: string;
+	slug: string;
+	excerpt: string;
+	thumbnail: string;
+	content: TipTapJSON;
+	time_read: string;
+	tag_id: number;
 }
 
 export interface CreateServiceRequest {

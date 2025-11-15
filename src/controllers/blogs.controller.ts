@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { BlogsService } from "../services";
-import type { CreateBlogRequest } from "../types";
+import type { CreateBlogRequest, CreateBlogLikeRequest } from "../types";
 
 export class BlogsController {
 	static async getAllBlogs(c: Context) {
@@ -70,6 +70,44 @@ export class BlogsController {
 				return c.json({ success: false, error: "Blog not found" }, 404);
 			}
 			return c.json({ success: true, message: "Blog deleted successfully" });
+		} catch (error) {
+			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+		}
+	}
+
+	static async getLikes(c: Context) {
+		try {
+			const id = parseInt(c.req.param("id"), 10);
+			const likeCount = await BlogsService.getLikeCount(id);
+			return c.json({ success: true, data: { likeCount } });
+		} catch (error) {
+			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+		}
+	}
+
+	static async toggleLike(c: Context) {
+		try {
+			const id = parseInt(c.req.param("id"), 10);
+			const { user_identifier } = await c.req.json() as CreateBlogLikeRequest;
+
+			const result = await BlogsService.toggleLike(id, user_identifier);
+			return c.json({ success: true, data: result });
+		} catch (error) {
+			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+		}
+	}
+
+	static async checkLikeStatus(c: Context) {
+		try {
+			const id = parseInt(c.req.param("id"), 10);
+			const userIdentifier = c.req.query("user_identifier");
+
+			if (!userIdentifier) {
+				return c.json({ success: false, error: "user_identifier query parameter is required" }, 400);
+			}
+
+			const hasLiked = await BlogsService.hasUserLiked(id, userIdentifier);
+			return c.json({ success: true, data: { hasLiked } });
 		} catch (error) {
 			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
 		}

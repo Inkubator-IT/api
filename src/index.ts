@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { testConnection, createTables } from "./db";
+import { testConnection } from "./db";
 import {
 	tagsRoutes,
 	techStackRoutes,
@@ -57,7 +57,6 @@ async function initializeDatabase() {
 	try {
 		console.log("Initializing database...");
 		await testConnection();
-		await createTables();
 		console.log("Database initialized successfully");
 	} catch (error) {
 		console.error("Failed to initialize database:", error);

@@ -2,15 +2,16 @@
 	"name": "template-honojs",
 	"scripts": {
 		"dev": "bun run --hot src/index.ts",
-    "start": "bun run src/index.ts",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
-    "db:drop": "drizzle-kit drop",
-    "lint": "biome lint .",
-    "lint:fix": "biome lint --write .",
-    "format": "biome format --write ."
+		"start": "bun run src/index.ts",
+		"migrate": "bun run src/db/migrate.ts",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:push": "drizzle-kit push",
+		"db:studio": "drizzle-kit studio",
+		"db:drop": "drizzle-kit drop",
+		"lint": "biome lint .",
+		"lint:fix": "biome lint --write .",
+		"format": "biome format --write ."
 	},
 	"dependencies": {
 		"drizzle-orm": "^0.44.7",

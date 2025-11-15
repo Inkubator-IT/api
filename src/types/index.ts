@@ -149,3 +149,14 @@ export interface CreateClientInformationRequest {
   masukan_website: string;
   kode_promo: string;
 }
+
+export interface BlogLike {
+  id: number;
+  blog_id: number;
+  user_identifier: string;
+  created_at: Date;
+}
+
+export interface CreateBlogLikeRequest {
+  user_identifier: string;
+}

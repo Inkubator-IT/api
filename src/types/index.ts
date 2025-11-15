@@ -33,6 +33,11 @@ export interface TechStack {
   updated_at: Date;
 }
 
+export interface TipTapJSON {
+	type: "doc";
+	content: Array<any>; 
+}
+
 export interface Blog {
 	id: number;
 	title: string;

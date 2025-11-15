@@ -35,7 +35,7 @@ export class ProjectsRepository {
   static async create(data: CreateProjectRequest): Promise<Project> {
     const result = await sql<Project[]>`
       INSERT INTO projects (title, description, owner, url, tag_id, tech_stack_id, testimonial)
-      VALUES (${data.title}, ${data.description}, ${data.owner}, ${data.url}, ${data.tag_id}, ${data.tech_stack_id}, ${data.testimonial})
+      VALUES (${data.title}, ${data.description}, ${data.owner}, ${data.url}, ${data.tag_id}, ${data.tech_stack_ids}, ${data.testimonial})
       RETURNING *
     `;
     return result[0];
@@ -52,7 +52,7 @@ export class ProjectsRepository {
         owner = COALESCE(${data.owner}, owner),
         url = COALESCE(${data.url}, url),
         tag_id = COALESCE(${data.tag_id}, tag_id),
-        tech_stack_id = COALESCE(${data.tech_stack_id}, tech_stack_id),
+        tech_stack_id = COALESCE(${data.tech_stack_ids}, tech_stack_id),
         testimonial = COALESCE(${data.testimonial}, testimonial),
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ${id}

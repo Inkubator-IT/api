@@ -36,7 +36,8 @@ app.get("/health", async (c) => {
 			database: isConnected ? "connected" : "disconnected",
 			timestamp: new Date().toISOString(),
 		});
-	} catch (_error) {
+	} catch (error) {
+		console.error("Database connection check failed:", error);
 		return c.json(
 			{
 				success: false,

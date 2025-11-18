@@ -9,6 +9,7 @@ const envSchema = z.object({
 	S3_BUCKET: z.string(),
 	S3_ENDPOINT: z.string(),
 	S3_REGION: z.string(),
+	S3_PUBLIC_BASE_URL: z.string().url(),
 });
 
 export const env = envSchema.parse(Bun.env);

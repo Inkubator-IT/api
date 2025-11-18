@@ -68,14 +68,13 @@ export class ProjectsRepository {
 				title: data.title,
 				description: data.description,
 				owner: data.owner,
-				url: data.url,
+				url: data.url || null,
 				category: data.category,
 				scope: data.scope,
-				thumbnail: data.thumbnail,
-				images: data.images,
+				thumbnail: data.thumbnail || null,
+				images: data.images || null,
 				featured: data.featured || false,
-				tag_id: data.tag_id,
-				testimonial: data.testimonial,
+				testimonial: data.testimonial || null,
 			})
 			.returning();
 
@@ -101,15 +100,15 @@ export class ProjectsRepository {
 		if (data.description !== undefined)
 			updateData.description = data.description;
 		if (data.owner !== undefined) updateData.owner = data.owner;
-		if (data.url !== undefined) updateData.url = data.url;
+		if (data.url !== undefined) updateData.url = data.url || null;
 		if (data.category !== undefined) updateData.category = data.category;
 		if (data.scope !== undefined) updateData.scope = data.scope;
-		if (data.thumbnail !== undefined) updateData.thumbnail = data.thumbnail;
-		if (data.images !== undefined) updateData.images = data.images;
+		if (data.thumbnail !== undefined)
+			updateData.thumbnail = data.thumbnail || null;
+		if (data.images !== undefined) updateData.images = data.images || null;
 		if (data.featured !== undefined) updateData.featured = data.featured;
-		if (data.tag_id !== undefined) updateData.tag_id = data.tag_id;
 		if (data.testimonial !== undefined)
-			updateData.testimonial = data.testimonial;
+			updateData.testimonial = data.testimonial || null;
 
 		updateData.updated_at = new Date();
 

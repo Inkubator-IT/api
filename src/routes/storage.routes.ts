@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { s3 } from "../configs";
+import { env, s3 } from "../configs";
 import {
 	storagePresignBodyValidator,
 	storageReadBodyValidator,
@@ -15,6 +15,10 @@ const ALLOWED_TYPES = [
 ];
 
 export const storageRoutes = new Hono();
+
+const publicBaseUrl = env.S3_PUBLIC_BASE_URL.replace(/\/$/, "");
+const buildPublicUrl = (key: string) =>
+	`${publicBaseUrl}/${key.replace(/^\//, "")}`;
 
 // POST /api/storage - Get presigned URL for upload
 storageRoutes.post("/", storagePresignBodyValidator, async (c) => {
@@ -53,17 +57,16 @@ storageRoutes.post("/", storagePresignBodyValidator, async (c) => {
 		type: contentType,
 	});
 
-	return c.json({ url: uploadUrl, key, contentType });
+	const publicUrl = buildPublicUrl(key);
+
+	return c.json({ url: uploadUrl, key, publicUrl, contentType });
 });
 
 // GET /api/storage - Get presigned URL for reading
 storageRoutes.get("/", storageReadBodyValidator, async (c) => {
 	const { key } = c.req.query();
 
-	const readUrl = s3.presign(key, {
-		method: "GET",
-		expiresIn: 60 * 60, // 1 hour
-	});
+	const publicUrl = buildPublicUrl(key);
 
-	return c.json({ url: readUrl });
+	return c.json({ url: publicUrl });
 });

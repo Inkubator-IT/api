@@ -38,28 +38,21 @@ export const services = pgTable("services", {
 	updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const projects = pgTable(
-	"projects",
-	{
-		id: serial("id").primaryKey(),
-		title: varchar("title", { length: 255 }).notNull(),
-		description: text("description"),
-		owner: varchar("owner", { length: 255 }),
-		url: varchar("url", { length: 500 }),
-		category: varchar("category", { length: 50 }).notNull(),
-		scope: varchar("scope", { length: 50 }).notNull(),
-		thumbnail: text("thumbnail"),
-		images: text("images").array(),
-		featured: boolean("featured").default(false),
-		tag_id: integer("tag_id").references(() => tags.tag_id),
-		testimonial: text("testimonial"),
-		created_at: timestamp("created_at").defaultNow().notNull(),
-		updated_at: timestamp("updated_at").defaultNow().notNull(),
-	},
-	(table) => ({
-		tagIdIdx: index("idx_projects_tag_id").on(table.tag_id),
-	}),
-);
+export const projects = pgTable("projects", {
+	id: serial("id").primaryKey(),
+	title: varchar("title", { length: 255 }).notNull(),
+	description: text("description"),
+	owner: varchar("owner", { length: 255 }),
+	url: varchar("url", { length: 500 }),
+	category: varchar("category", { length: 50 }).notNull(),
+	scope: varchar("scope", { length: 50 }).notNull(),
+	thumbnail: text("thumbnail"),
+	images: text("images").array(),
+	featured: boolean("featured").default(false),
+	testimonial: text("testimonial"),
+	created_at: timestamp("created_at").defaultNow().notNull(),
+	updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
 
 export const projectTechStack = pgTable(
 	"project_tech_stack",
@@ -151,15 +144,10 @@ export const clientInformation = pgTable(
 );
 
 export const tagsRelations = relations(tags, ({ many }) => ({
-	projects: many(projects),
 	blogs: many(blogs),
 }));
 
-export const projectsRelations = relations(projects, ({ one, many }) => ({
-	tag: one(tags, {
-		fields: [projects.tag_id],
-		references: [tags.tag_id],
-	}),
+export const projectsRelations = relations(projects, ({ many }) => ({
 	techStacks: many(projectTechStack),
 }));
 

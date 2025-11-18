@@ -15,6 +15,7 @@ export const storagePresignBodyValidator = async (c: Context, next: Next) => {
 		storagePresignBodySchema.parse(body);
 		await next();
 	} catch (error) {
+		console.error("Invalid storage presign payload:", error);
 		return c.json({ error: "Invalid request body" }, 400);
 	}
 };
@@ -25,6 +26,7 @@ export const storageReadBodyValidator = async (c: Context, next: Next) => {
 		storageReadBodySchema.parse(query);
 		await next();
 	} catch (error) {
+		console.error("Invalid storage read query:", error);
 		return c.json({ error: "Invalid query parameters" }, 400);
 	}
 };

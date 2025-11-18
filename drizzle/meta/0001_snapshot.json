@@ -1,0 +1,712 @@
+{
+	"id": "66132a8f-2389-43be-88a7-2bdc65a7f9a5",
+	"prevId": "256a518b-e6f9-4cb3-9228-addced9d8969",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.blog_likes": {
+			"name": "blog_likes",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"blog_id": {
+					"name": "blog_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"user_identifier": {
+					"name": "user_identifier",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"idx_blog_likes_blog_id": {
+					"name": "idx_blog_likes_blog_id",
+					"columns": [
+						{
+							"expression": "blog_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"unique_blog_like": {
+					"name": "unique_blog_like",
+					"columns": [
+						{
+							"expression": "blog_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "user_identifier",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"blog_likes_blog_id_blogs_id_fk": {
+					"name": "blog_likes_blog_id_blogs_id_fk",
+					"tableFrom": "blog_likes",
+					"tableTo": "blogs",
+					"columnsFrom": ["blog_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.blogs": {
+			"name": "blogs",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"title": {
+					"name": "title",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"author": {
+					"name": "author",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"slug": {
+					"name": "slug",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"excerpt": {
+					"name": "excerpt",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"thumbnail": {
+					"name": "thumbnail",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"content": {
+					"name": "content",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"time_read": {
+					"name": "time_read",
+					"type": "varchar(50)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"tag_id": {
+					"name": "tag_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"idx_blogs_tag_id": {
+					"name": "idx_blogs_tag_id",
+					"columns": [
+						{
+							"expression": "tag_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"idx_blogs_slug": {
+					"name": "idx_blogs_slug",
+					"columns": [
+						{
+							"expression": "slug",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"blogs_tag_id_tags_tag_id_fk": {
+					"name": "blogs_tag_id_tags_tag_id_fk",
+					"tableFrom": "blogs",
+					"tableTo": "tags",
+					"columnsFrom": ["tag_id"],
+					"columnsTo": ["tag_id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"blogs_slug_unique": {
+					"name": "blogs_slug_unique",
+					"nullsNotDistinct": false,
+					"columns": ["slug"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.client_information": {
+			"name": "client_information",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"nama_lengkap": {
+					"name": "nama_lengkap",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"email": {
+					"name": "email",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"no_whatsapp": {
+					"name": "no_whatsapp",
+					"type": "varchar(20)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"instansi": {
+					"name": "instansi",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"civitas_itb": {
+					"name": "civitas_itb",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"jenis_proyek": {
+					"name": "jenis_proyek",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"tujuan_pembuatan_proyek": {
+					"name": "tujuan_pembuatan_proyek",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"deskripsi_proyek": {
+					"name": "deskripsi_proyek",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"ekspetasi_biaya": {
+					"name": "ekspetasi_biaya",
+					"type": "varchar(100)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"deadline_proyek": {
+					"name": "deadline_proyek",
+					"type": "varchar(100)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"sudah_memiliki_desain": {
+					"name": "sudah_memiliki_desain",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"pertanyaan_untuk_proyek": {
+					"name": "pertanyaan_untuk_proyek",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"dimana_mengetahui_iit": {
+					"name": "dimana_mengetahui_iit",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"rating_website": {
+					"name": "rating_website",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"masukan_website": {
+					"name": "masukan_website",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"kode_promo": {
+					"name": "kode_promo",
+					"type": "varchar(50)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"idx_client_info_email": {
+					"name": "idx_client_info_email",
+					"columns": [
+						{
+							"expression": "email",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.project_tech_stack": {
+			"name": "project_tech_stack",
+			"schema": "",
+			"columns": {
+				"project_id": {
+					"name": "project_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"tech_stack_id": {
+					"name": "tech_stack_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {
+				"idx_project_tech_stack_project_id": {
+					"name": "idx_project_tech_stack_project_id",
+					"columns": [
+						{
+							"expression": "project_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"idx_project_tech_stack_tech_stack_id": {
+					"name": "idx_project_tech_stack_tech_stack_id",
+					"columns": [
+						{
+							"expression": "tech_stack_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"project_tech_stack_project_id_projects_id_fk": {
+					"name": "project_tech_stack_project_id_projects_id_fk",
+					"tableFrom": "project_tech_stack",
+					"tableTo": "projects",
+					"columnsFrom": ["project_id"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"project_tech_stack_tech_stack_id_tech_stack_tech_stack_id_fk": {
+					"name": "project_tech_stack_tech_stack_id_tech_stack_tech_stack_id_fk",
+					"tableFrom": "project_tech_stack",
+					"tableTo": "tech_stack",
+					"columnsFrom": ["tech_stack_id"],
+					"columnsTo": ["tech_stack_id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"project_tech_stack_project_id_tech_stack_id_pk": {
+					"name": "project_tech_stack_project_id_tech_stack_id_pk",
+					"columns": ["project_id", "tech_stack_id"]
+				}
+			},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.projects": {
+			"name": "projects",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"title": {
+					"name": "title",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"owner": {
+					"name": "owner",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"url": {
+					"name": "url",
+					"type": "varchar(500)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"category": {
+					"name": "category",
+					"type": "varchar(50)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"scope": {
+					"name": "scope",
+					"type": "varchar(50)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"thumbnail": {
+					"name": "thumbnail",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"images": {
+					"name": "images",
+					"type": "text[]",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"featured": {
+					"name": "featured",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false,
+					"default": false
+				},
+				"testimonial": {
+					"name": "testimonial",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.services": {
+			"name": "services",
+			"schema": "",
+			"columns": {
+				"service_id": {
+					"name": "service_id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"service_name": {
+					"name": "service_name",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"service_description": {
+					"name": "service_description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"services_service_name_unique": {
+					"name": "services_service_name_unique",
+					"nullsNotDistinct": false,
+					"columns": ["service_name"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.tags": {
+			"name": "tags",
+			"schema": "",
+			"columns": {
+				"tag_id": {
+					"name": "tag_id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"tag_name": {
+					"name": "tag_name",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"tag_description": {
+					"name": "tag_description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"tags_tag_name_unique": {
+					"name": "tags_tag_name_unique",
+					"nullsNotDistinct": false,
+					"columns": ["tag_name"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.tech_stack": {
+			"name": "tech_stack",
+			"schema": "",
+			"columns": {
+				"tech_stack_id": {
+					"name": "tech_stack_id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"tech_stack_name": {
+					"name": "tech_stack_name",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"tech_stack_description": {
+					"name": "tech_stack_description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"icon_url": {
+					"name": "icon_url",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"updated_at": {
+					"name": "updated_at",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"tech_stack_tech_stack_name_unique": {
+					"name": "tech_stack_tech_stack_name_unique",
+					"nullsNotDistinct": false,
+					"columns": ["tech_stack_name"]
+				}
+			},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}

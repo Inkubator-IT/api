@@ -1,9 +1,20 @@
 import { TechStackRepository } from "../repositories";
+import { toPublicUrl } from "../utils/media";
 import type { TechStack, CreateTechStackRequest } from "../types";
 
 export class TechStackService {
+	private static withPublicIcon(techStack: TechStack | null): TechStack | null {
+		if (!techStack) return techStack;
+		return {
+			...techStack,
+			icon_url: (toPublicUrl(techStack.icon_url) ??
+				techStack.icon_url) as TechStack["icon_url"],
+		};
+	}
+
 	static async getAllTechStacks(): Promise<TechStack[]> {
-		return await TechStackRepository.findAll();
+		const stacks = await TechStackRepository.findAll();
+		return stacks.map((stack) => this.withPublicIcon(stack)!) as TechStack[];
 	}
 
 	static async getTechStackById(
@@ -12,7 +23,8 @@ export class TechStackService {
 		if (!techStackId || techStackId <= 0) {
 			throw new Error("Invalid tech stack ID");
 		}
-		return await TechStackRepository.findById(techStackId);
+		const stack = await TechStackRepository.findById(techStackId);
+		return this.withPublicIcon(stack);
 	}
 
 	static async createTechStack(
@@ -21,7 +33,8 @@ export class TechStackService {
 		if (!data.tech_stack_name || data.tech_stack_name.trim().length === 0) {
 			throw new Error("Tech stack name is required");
 		}
-		return await TechStackRepository.create(data);
+		const stack = await TechStackRepository.create(data);
+		return this.withPublicIcon(stack)!;
 	}
 
 	static async updateTechStack(
@@ -31,7 +44,8 @@ export class TechStackService {
 		if (!techStackId || techStackId <= 0) {
 			throw new Error("Invalid tech stack ID");
 		}
-		return await TechStackRepository.update(techStackId, data);
+		const stack = await TechStackRepository.update(techStackId, data);
+		return this.withPublicIcon(stack);
 	}
 
 	static async deleteTechStack(techStackId: number): Promise<boolean> {

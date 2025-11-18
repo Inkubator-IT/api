@@ -1,23 +1,36 @@
 import { BlogsRepository } from "../repositories";
-import type { Blog, CreateBlogRequest, BlogLike } from "../types";
+import { toPublicUrl } from "../utils/media";
+import type { Blog, CreateBlogRequest } from "../types";
 
 export class BlogsService {
+	private static withPublicThumbnail(blog: Blog | null): Blog | null {
+		if (!blog) return blog;
+		return {
+			...blog,
+			thumbnail: (toPublicUrl(blog.thumbnail) ??
+				blog.thumbnail) as Blog["thumbnail"],
+		};
+	}
+
 	static async getAllBlogs(): Promise<Blog[]> {
-		return await BlogsRepository.findAll();
+		const blogs = await BlogsRepository.findAll();
+		return blogs.map((blog) => this.withPublicThumbnail(blog)!) as Blog[];
 	}
 
 	static async getBlogById(id: number): Promise<Blog | null> {
 		if (!id || id <= 0) {
 			throw new Error("Invalid blog ID");
 		}
-		return await BlogsRepository.findById(id);
+		const blog = await BlogsRepository.findById(id);
+		return this.withPublicThumbnail(blog);
 	}
 
 	static async getBlogBySlug(slug: string): Promise<Blog | null> {
 		if (!slug || slug.trim().length === 0) {
 			throw new Error("Blog slug is required");
 		}
-		return await BlogsRepository.findBySlug(slug);
+		const blog = await BlogsRepository.findBySlug(slug);
+		return this.withPublicThumbnail(blog);
 	}
 
 	static async createBlog(data: CreateBlogRequest): Promise<Blog> {
@@ -37,7 +50,8 @@ export class BlogsService {
 		) {
 			throw new Error("Blog content is required");
 		}
-		return await BlogsRepository.create(data);
+		const blog = await BlogsRepository.create(data);
+		return this.withPublicThumbnail(blog)!;
 	}
 
 	static async updateBlog(
@@ -47,7 +61,8 @@ export class BlogsService {
 		if (!id || id <= 0) {
 			throw new Error("Invalid blog ID");
 		}
-		return await BlogsRepository.update(id, data);
+		const blog = await BlogsRepository.update(id, data);
+		return this.withPublicThumbnail(blog);
 	}
 
 	static async deleteBlog(id: number): Promise<boolean> {

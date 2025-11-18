@@ -1,4 +1,5 @@
 import { BlogsRepository } from "../repositories";
+import { triggerDeployHook } from "../lib/deploy-hook";
 import { toPublicUrl } from "../utils/media";
 import type { Blog, CreateBlogRequest } from "../types";
 
@@ -51,6 +52,7 @@ export class BlogsService {
 			throw new Error("Blog content is required");
 		}
 		const blog = await BlogsRepository.create(data);
+		await triggerDeployHook("blog:create");
 		return this.withPublicThumbnail(blog)!;
 	}
 
@@ -62,6 +64,9 @@ export class BlogsService {
 			throw new Error("Invalid blog ID");
 		}
 		const blog = await BlogsRepository.update(id, data);
+		if (blog) {
+			await triggerDeployHook("blog:update");
+		}
 		return this.withPublicThumbnail(blog);
 	}
 
@@ -69,7 +74,11 @@ export class BlogsService {
 		if (!id || id <= 0) {
 			throw new Error("Invalid blog ID");
 		}
-		return await BlogsRepository.delete(id);
+		const deleted = await BlogsRepository.delete(id);
+		if (deleted) {
+			await triggerDeployHook("blog:delete");
+		}
+		return deleted;
 	}
 
 	static async getLikeCount(blogId: number): Promise<number> {

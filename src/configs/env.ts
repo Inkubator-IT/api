@@ -10,6 +10,7 @@ const envSchema = z.object({
 	S3_ENDPOINT: z.string(),
 	S3_REGION: z.string(),
 	S3_PUBLIC_BASE_URL: z.string().url(),
+	CLOUDFLARE_DEPLOY_HOOK_URL: z.string().url().optional(),
 });
 
 export const env = envSchema.parse(Bun.env);

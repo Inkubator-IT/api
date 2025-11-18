@@ -1,4 +1,5 @@
 import { ProjectsRepository } from "../repositories";
+import { triggerDeployHook } from "../lib/deploy-hook";
 import { mapMediaArray, toPublicUrl } from "../utils/media";
 import type { Project, CreateProjectRequest } from "../types";
 
@@ -49,6 +50,7 @@ export class ProjectsService {
 			throw new Error("Project owner is required");
 		}
 		const project = await ProjectsRepository.create(data);
+		await triggerDeployHook("project:create");
 		return this.withPublicMedia(project)!;
 	}
 
@@ -60,6 +62,9 @@ export class ProjectsService {
 			throw new Error("Invalid project ID");
 		}
 		const project = await ProjectsRepository.update(id, data);
+		if (project) {
+			await triggerDeployHook("project:update");
+		}
 		return this.withPublicMedia(project);
 	}
 
@@ -67,6 +72,10 @@ export class ProjectsService {
 		if (!id || id <= 0) {
 			throw new Error("Invalid project ID");
 		}
-		return await ProjectsRepository.delete(id);
+		const deleted = await ProjectsRepository.delete(id);
+		if (deleted) {
+			await triggerDeployHook("project:delete");
+		}
+		return deleted;
 	}
 }

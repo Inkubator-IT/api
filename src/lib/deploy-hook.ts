@@ -22,4 +22,3 @@ export async function triggerDeployHook(event: string) {
 		console.error(`Error triggering deploy hook for ${event}:`, error);
 	}
 }
-

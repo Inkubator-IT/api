@@ -8,7 +8,13 @@ export class ServicesController {
 			const services = await ServicesService.getAllServices();
 			return c.json({ success: true, data: services });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
@@ -21,31 +27,49 @@ export class ServicesController {
 			}
 			return c.json({ success: true, data: service });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
 	static async createService(c: Context) {
 		try {
-			const data = await c.req.json() as CreateServiceRequest;
+			const data = (await c.req.json()) as CreateServiceRequest;
 			const service = await ServicesService.createService(data);
 			return c.json({ success: true, data: service }, 201);
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
 	static async updateService(c: Context) {
 		try {
 			const serviceId = parseInt(c.req.param("id"), 10);
-			const data = await c.req.json() as Partial<CreateServiceRequest>;
+			const data = (await c.req.json()) as Partial<CreateServiceRequest>;
 			const service = await ServicesService.updateService(serviceId, data);
 			if (!service) {
 				return c.json({ success: false, error: "Service not found" }, 404);
 			}
 			return c.json({ success: true, data: service });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
@@ -58,7 +82,13 @@ export class ServicesController {
 			}
 			return c.json({ success: true, message: "Service deleted successfully" });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 }

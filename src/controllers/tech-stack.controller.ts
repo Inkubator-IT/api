@@ -8,7 +8,13 @@ export class TechStackController {
 			const techStacks = await TechStackService.getAllTechStacks();
 			return c.json({ success: true, data: techStacks });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
@@ -21,31 +27,52 @@ export class TechStackController {
 			}
 			return c.json({ success: true, data: techStack });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
 	static async createTechStack(c: Context) {
 		try {
-			const data = await c.req.json() as CreateTechStackRequest;
+			const data = (await c.req.json()) as CreateTechStackRequest;
 			const techStack = await TechStackService.createTechStack(data);
 			return c.json({ success: true, data: techStack }, 201);
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
 	static async updateTechStack(c: Context) {
 		try {
 			const techStackId = parseInt(c.req.param("id"), 10);
-			const data = await c.req.json() as Partial<CreateTechStackRequest>;
-			const techStack = await TechStackService.updateTechStack(techStackId, data);
+			const data = (await c.req.json()) as Partial<CreateTechStackRequest>;
+			const techStack = await TechStackService.updateTechStack(
+				techStackId,
+				data,
+			);
 			if (!techStack) {
 				return c.json({ success: false, error: "Tech stack not found" }, 404);
 			}
 			return c.json({ success: true, data: techStack });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
@@ -56,9 +83,18 @@ export class TechStackController {
 			if (!deleted) {
 				return c.json({ success: false, error: "Tech stack not found" }, 404);
 			}
-			return c.json({ success: true, message: "Tech stack deleted successfully" });
+			return c.json({
+				success: true,
+				message: "Tech stack deleted successfully",
+			});
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 }

@@ -1,18 +1,12 @@
-import postgres from "postgres";
+import { sql } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/bun-sql";
+import * as schema from "./schema";
 
-const connectionString = Bun.env.DATABASE_URL || "postgresql://myuser:mypassword@localhost:5432/mydb";
-
-export const sql = postgres(connectionString, {
-	host: Bun.env.DB_HOST || "localhost",
-	port: parseInt(Bun.env.DB_PORT || "5432", 10),
-	username: Bun.env.POSTGRES_USER || "myuser",
-	password: Bun.env.POSTGRES_PASSWORD || "mypassword",
-	database: Bun.env.POSTGRES_DB || "mydb",
-});
+export const db = drizzle(Bun.env.DATABASE_URL!, { schema });
 
 export async function testConnection(): Promise<boolean> {
 	try {
-		await sql`SELECT 1`;
+		await db.execute(sql`SELECT 1`);
 		console.log("Database connection successful");
 		return true;
 	} catch (error) {
@@ -20,9 +14,3 @@ export async function testConnection(): Promise<boolean> {
 		return false;
 	}
 }
-
-export async function closeConnection(): Promise<void> {
-	await sql.end();
-}
-
-export { createTables, dropTables } from "./schema";

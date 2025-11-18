@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { testConnection, createTables } from "./db";
+import { testConnection } from "./db";
 import {
 	tagsRoutes,
 	techStackRoutes,
@@ -19,10 +19,10 @@ app.use("*", logger());
 
 // Health check endpoint
 app.get("/", (c) => {
-	return c.json({ 
-		success: true, 
+	return c.json({
+		success: true,
 		message: "IIT API Server is running!",
-		timestamp: new Date().toISOString()
+		timestamp: new Date().toISOString(),
 	});
 });
 
@@ -30,17 +30,20 @@ app.get("/", (c) => {
 app.get("/health", async (c) => {
 	try {
 		const isConnected = await testConnection();
-		return c.json({ 
-			success: true, 
+		return c.json({
+			success: true,
 			database: isConnected ? "connected" : "disconnected",
-			timestamp: new Date().toISOString()
+			timestamp: new Date().toISOString(),
 		});
 	} catch (_error) {
-		return c.json({ 
-			success: false, 
-			error: "Database connection failed",
-			timestamp: new Date().toISOString()
-		}, 500);
+		return c.json(
+			{
+				success: false,
+				error: "Database connection failed",
+				timestamp: new Date().toISOString(),
+			},
+			500,
+		);
 	}
 });
 
@@ -57,7 +60,6 @@ async function initializeDatabase() {
 	try {
 		console.log("Initializing database...");
 		await testConnection();
-		await createTables();
 		console.log("Database initialized successfully");
 	} catch (error) {
 		console.error("Failed to initialize database:", error);

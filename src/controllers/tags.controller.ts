@@ -8,7 +8,13 @@ export class TagsController {
 			const tags = await TagsService.getAllTags();
 			return c.json({ success: true, data: tags });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
@@ -21,31 +27,49 @@ export class TagsController {
 			}
 			return c.json({ success: true, data: tag });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 
 	static async createTag(c: Context) {
 		try {
-			const data = await c.req.json() as CreateTagRequest;
+			const data = (await c.req.json()) as CreateTagRequest;
 			const tag = await TagsService.createTag(data);
 			return c.json({ success: true, data: tag }, 201);
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
 	static async updateTag(c: Context) {
 		try {
 			const tagId = parseInt(c.req.param("id"), 10);
-			const data = await c.req.json() as Partial<CreateTagRequest>;
+			const data = (await c.req.json()) as Partial<CreateTagRequest>;
 			const tag = await TagsService.updateTag(tagId, data);
 			if (!tag) {
 				return c.json({ success: false, error: "Tag not found" }, 404);
 			}
 			return c.json({ success: true, data: tag });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 400);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				400,
+			);
 		}
 	}
 
@@ -58,7 +82,13 @@ export class TagsController {
 			}
 			return c.json({ success: true, message: "Tag deleted successfully" });
 		} catch (error) {
-			return c.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, 500);
+			return c.json(
+				{
+					success: false,
+					error: error instanceof Error ? error.message : "Unknown error",
+				},
+				500,
+			);
 		}
 	}
 }

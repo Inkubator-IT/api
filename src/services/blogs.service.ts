@@ -30,13 +30,20 @@ export class BlogsService {
 		if (!data.slug || data.slug.trim().length === 0) {
 			throw new Error("Blog slug is required");
 		}
-		if (!data.content || !data.content.content || data.content.content.length === 0) {
+		if (
+			!data.content ||
+			!data.content.content ||
+			data.content.content.length === 0
+		) {
 			throw new Error("Blog content is required");
 		}
 		return await BlogsRepository.create(data);
 	}
 
-	static async updateBlog(id: number, data: Partial<CreateBlogRequest>): Promise<Blog | null> {
+	static async updateBlog(
+		id: number,
+		data: Partial<CreateBlogRequest>,
+	): Promise<Blog | null> {
 		if (!id || id <= 0) {
 			throw new Error("Invalid blog ID");
 		}
@@ -57,7 +64,10 @@ export class BlogsService {
 		return await BlogsRepository.getLikeCount(blogId);
 	}
 
-	static async hasUserLiked(blogId: number, userIdentifier: string): Promise<boolean> {
+	static async hasUserLiked(
+		blogId: number,
+		userIdentifier: string,
+	): Promise<boolean> {
 		if (!blogId || blogId <= 0) {
 			throw new Error("Invalid blog ID");
 		}
@@ -67,7 +77,10 @@ export class BlogsService {
 		return await BlogsRepository.hasUserLiked(blogId, userIdentifier);
 	}
 
-	static async toggleLike(blogId: number, userIdentifier: string): Promise<{ liked: boolean; likeCount: number }> {
+	static async toggleLike(
+		blogId: number,
+		userIdentifier: string,
+	): Promise<{ liked: boolean; likeCount: number }> {
 		if (!blogId || blogId <= 0) {
 			throw new Error("Invalid blog ID");
 		}

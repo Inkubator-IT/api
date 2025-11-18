@@ -6,21 +6,28 @@ export class TechStackService {
 		return await TechStackRepository.findAll();
 	}
 
-	static async getTechStackById(techStackId: number): Promise<TechStack | null> {
+	static async getTechStackById(
+		techStackId: number,
+	): Promise<TechStack | null> {
 		if (!techStackId || techStackId <= 0) {
 			throw new Error("Invalid tech stack ID");
 		}
 		return await TechStackRepository.findById(techStackId);
 	}
 
-	static async createTechStack(data: CreateTechStackRequest): Promise<TechStack> {
+	static async createTechStack(
+		data: CreateTechStackRequest,
+	): Promise<TechStack> {
 		if (!data.tech_stack_name || data.tech_stack_name.trim().length === 0) {
 			throw new Error("Tech stack name is required");
 		}
 		return await TechStackRepository.create(data);
 	}
 
-	static async updateTechStack(techStackId: number, data: Partial<CreateTechStackRequest>): Promise<TechStack | null> {
+	static async updateTechStack(
+		techStackId: number,
+		data: Partial<CreateTechStackRequest>,
+	): Promise<TechStack | null> {
 		if (!techStackId || techStackId <= 0) {
 			throw new Error("Invalid tech stack ID");
 		}

@@ -5,11 +5,11 @@ import type { Blog, CreateBlogRequest, BlogLike } from "../types";
 
 export class BlogsRepository {
 	private static parseBlogContent(blog: any): Blog {
-		if (blog && blog.content && typeof blog.content === 'string') {
+		if (blog && blog.content && typeof blog.content === "string") {
 			try {
 				blog.content = JSON.parse(blog.content);
 			} catch (error) {
-				console.error('Error parsing blog content:', error);
+				console.error("Error parsing blog content:", error);
 			}
 		}
 		return blog as Blog;
@@ -39,7 +39,7 @@ export class BlogsRepository {
 			.leftJoin(tags, eq(blogs.tag_id, tags.tag_id))
 			.orderBy(desc(blogs.created_at));
 
-		return results.map(blog => this.parseBlogContent(blog));
+		return results.map((blog) => BlogsRepository.parseBlogContent(blog));
 	}
 
 	static async findById(id: number): Promise<Blog | null> {
@@ -66,7 +66,7 @@ export class BlogsRepository {
 			.leftJoin(tags, eq(blogs.tag_id, tags.tag_id))
 			.where(eq(blogs.id, id));
 
-		return result[0] ? this.parseBlogContent(result[0]) : null;
+		return result[0] ? BlogsRepository.parseBlogContent(result[0]) : null;
 	}
 
 	static async findBySlug(slug: string): Promise<Blog | null> {
@@ -93,25 +93,34 @@ export class BlogsRepository {
 			.leftJoin(tags, eq(blogs.tag_id, tags.tag_id))
 			.where(eq(blogs.slug, slug));
 
-		return result[0] ? this.parseBlogContent(result[0]) : null;
+		return result[0] ? BlogsRepository.parseBlogContent(result[0]) : null;
 	}
 
 	static async create(data: CreateBlogRequest): Promise<Blog> {
-		const result = await db.insert(blogs).values({
-			title: data.title,
-			author: data.author,
-			slug: data.slug,
-			excerpt: data.excerpt,
-			thumbnail: data.thumbnail,
-			content: typeof data.content === 'string' ? data.content : JSON.stringify(data.content),
-			time_read: data.time_read,
-			tag_id: data.tag_id,
-		}).returning();
+		const result = await db
+			.insert(blogs)
+			.values({
+				title: data.title,
+				author: data.author,
+				slug: data.slug,
+				excerpt: data.excerpt,
+				thumbnail: data.thumbnail,
+				content:
+					typeof data.content === "string"
+						? data.content
+						: JSON.stringify(data.content),
+				time_read: data.time_read,
+				tag_id: data.tag_id,
+			})
+			.returning();
 
-		return this.findById(result[0].id) as Promise<Blog>;
+		return BlogsRepository.findById(result[0].id) as Promise<Blog>;
 	}
 
-	static async update(id: number, data: Partial<CreateBlogRequest>): Promise<Blog | null> {
+	static async update(
+		id: number,
+		data: Partial<CreateBlogRequest>,
+	): Promise<Blog | null> {
 		const updateData: any = {};
 
 		if (data.title !== undefined) updateData.title = data.title;
@@ -120,7 +129,10 @@ export class BlogsRepository {
 		if (data.excerpt !== undefined) updateData.excerpt = data.excerpt;
 		if (data.thumbnail !== undefined) updateData.thumbnail = data.thumbnail;
 		if (data.content !== undefined) {
-			updateData.content = typeof data.content === 'string' ? data.content : JSON.stringify(data.content);
+			updateData.content =
+				typeof data.content === "string"
+					? data.content
+					: JSON.stringify(data.content);
 		}
 		if (data.time_read !== undefined) updateData.time_read = data.time_read;
 		if (data.tag_id !== undefined) updateData.tag_id = data.tag_id;
@@ -133,7 +145,7 @@ export class BlogsRepository {
 			.where(eq(blogs.id, id))
 			.returning();
 
-		return result[0] ? this.findById(id) : null;
+		return result[0] ? BlogsRepository.findById(id) : null;
 	}
 
 	static async delete(id: number): Promise<boolean> {
@@ -150,21 +162,27 @@ export class BlogsRepository {
 		return result[0]?.count || 0;
 	}
 
-	static async hasUserLiked(blogId: number, userIdentifier: string): Promise<boolean> {
+	static async hasUserLiked(
+		blogId: number,
+		userIdentifier: string,
+	): Promise<boolean> {
 		const result = await db
 			.select()
 			.from(blogLikes)
 			.where(
 				and(
 					eq(blogLikes.blog_id, blogId),
-					eq(blogLikes.user_identifier, userIdentifier)
-				)
+					eq(blogLikes.user_identifier, userIdentifier),
+				),
 			);
 
 		return result.length > 0;
 	}
 
-	static async addLike(blogId: number, userIdentifier: string): Promise<BlogLike> {
+	static async addLike(
+		blogId: number,
+		userIdentifier: string,
+	): Promise<BlogLike> {
 		const result = await db
 			.insert(blogLikes)
 			.values({
@@ -176,14 +194,17 @@ export class BlogsRepository {
 		return result[0] as unknown as BlogLike;
 	}
 
-	static async removeLike(blogId: number, userIdentifier: string): Promise<boolean> {
+	static async removeLike(
+		blogId: number,
+		userIdentifier: string,
+	): Promise<boolean> {
 		const result = await db
 			.delete(blogLikes)
 			.where(
 				and(
 					eq(blogLikes.blog_id, blogId),
-					eq(blogLikes.user_identifier, userIdentifier)
-				)
+					eq(blogLikes.user_identifier, userIdentifier),
+				),
 			)
 			.returning();
 

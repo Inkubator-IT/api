@@ -9,13 +9,34 @@ import {
 	projectsRoutes,
 	blogsRoutes,
 	clientInformationRoutes,
+	authRoutes,
 	storageRoutes,
 } from "./routes";
 
 const app = new Hono();
 
-// Middleware
-app.use("*", cors());
+const getAllowedOrigins = (): string[] => {
+	const origins = Bun.env.CORS_ALLOWED_ORIGINS;
+	if (origins) {
+		return origins.split(",").map((origin) => origin.trim());
+	}
+	return [
+		"http://localhost:5173",
+		"http://localhost:5174",
+		"http://localhost:3000",
+	];
+};
+
+app.use(
+	"*",
+	cors({
+		origin: getAllowedOrigins(),
+		credentials: true,
+		allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowHeaders: ["Content-Type", "Authorization"],
+	}),
+);
+
 app.use("*", logger());
 
 // Health check endpoint
@@ -50,6 +71,7 @@ app.get("/health", async (c) => {
 });
 
 // Register routes
+app.route("/api/auth", authRoutes);
 app.route("/api/tags", tagsRoutes);
 app.route("/api/tech-stack", techStackRoutes);
 app.route("/api/services", servicesRoutes);

@@ -30,12 +30,16 @@ export class ClientInformationService {
 		if (!data.email.includes("@")) {
 			throw new Error("Invalid email format");
 		}
+
 		if (
-			data.rating_website &&
+			data.rating_website !== null &&
+			data.rating_website !== undefined &&
+			data.rating_website !== 0 &&
 			(data.rating_website < 1 || data.rating_website > 5)
 		) {
-			throw new Error("Rating must be between 1 and 5");
+			throw new Error("Rating must be between 1 and 5, or 0 for not rated");
 		}
+
 		return await ClientInformationRepository.create(data);
 	}
 
@@ -50,10 +54,12 @@ export class ClientInformationService {
 			throw new Error("Invalid email format");
 		}
 		if (
-			data.rating_website &&
+			data.rating_website !== null &&
+			data.rating_website !== undefined &&
+			data.rating_website !== 0 &&
 			(data.rating_website < 1 || data.rating_website > 5)
 		) {
-			throw new Error("Rating must be between 1 and 5");
+			throw new Error("Rating must be between 1 and 5, or 0 for not rated");
 		}
 		return await ClientInformationRepository.update(id, data);
 	}

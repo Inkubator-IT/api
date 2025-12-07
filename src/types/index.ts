@@ -70,20 +70,20 @@ export interface ClientInformation {
 	id: number;
 	nama_lengkap: string;
 	email: string;
-	no_whatsapp: string;
-	instansi: string;
-	civitas_itb: boolean;
-	jenis_proyek: string;
-	tujuan_pembuatan_proyek: string;
-	deskripsi_proyek: string;
-	ekspetasi_biaya: string;
-	deadline_proyek: string;
-	sudah_memiliki_desain: boolean;
-	pertanyaan_untuk_proyek: string;
-	dimana_mengetahui_iit: string;
-	rating_website: number;
-	masukan_website: string;
-	kode_promo: string;
+	no_whatsapp: string | null;
+	instansi: string | null;
+	civitas_itb: boolean | null;
+	jenis_proyek: string | null;
+	tujuan_pembuatan_proyek: string | null;
+	deskripsi_proyek: string | null;
+	ekspetasi_biaya: string | null;
+	deadline_proyek: string | null;
+	sudah_memiliki_desain: boolean | null;
+	pertanyaan_untuk_proyek: string | null;
+	dimana_mengetahui_iit: string | null;
+	rating_website: number | null;
+	masukan_website: string | null;
+	kode_promo: string | null;
 	created_at: Date;
 	updated_at: Date;
 }
@@ -134,20 +134,20 @@ export interface CreateServiceRequest {
 export interface CreateClientInformationRequest {
 	nama_lengkap: string;
 	email: string;
-	no_whatsapp: string;
-	instansi: string;
+	no_whatsapp: string | null;
+	instansi: string | null;
 	civitas_itb: boolean;
-	jenis_proyek: string;
-	tujuan_pembuatan_proyek: string;
-	deskripsi_proyek: string;
-	ekspetasi_biaya: string;
-	deadline_proyek: string;
+	jenis_proyek: string | null;
+	tujuan_pembuatan_proyek: string | null;
+	deskripsi_proyek: string | null;
+	ekspetasi_biaya: string | null;
+	deadline_proyek: string | null;
 	sudah_memiliki_desain: boolean;
-	pertanyaan_untuk_proyek: string;
-	dimana_mengetahui_iit: string;
-	rating_website: number;
-	masukan_website: string;
-	kode_promo: string;
+	pertanyaan_untuk_proyek: string | null;
+	dimana_mengetahui_iit: string | null;
+	rating_website: number | null;
+	masukan_website: string | null;
+	kode_promo: string | null;
 }
 
 export interface BlogLike {

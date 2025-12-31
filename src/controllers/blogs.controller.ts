@@ -114,8 +114,16 @@ export class BlogsController {
 	static async getLikes(c: Context) {
 		try {
 			const id = parseInt(c.req.param("id"), 10);
+			const userIdentifier = c.req.header("X-User-Identifier") || c.req.query("user_identifier");
 			const likeCount = await BlogsService.getLikeCount(id);
-			return c.json({ success: true, data: { likeCount } });
+
+			let liked = false;
+
+			if (userIdentifier) {
+				liked = await BlogsService.hasUserLiked(id, userIdentifier);
+			}
+
+			return c.json({ success: true, data: { count: likeCount, liked } });
 		} catch (error) {
 			return c.json(
 				{

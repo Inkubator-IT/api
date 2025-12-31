@@ -33,7 +33,7 @@ app.use(
 		origin: getAllowedOrigins(),
 		credentials: true,
 		allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-		allowHeaders: ["Content-Type", "Authorization"],
+		allowHeaders: ["Content-Type", "Authorization", "X-User-Identifier"],
 	}),
 );
 

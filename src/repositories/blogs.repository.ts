@@ -38,8 +38,19 @@ export class BlogsRepository {
 			.from(blogs)
 			.leftJoin(tags, eq(blogs.tag_id, tags.tag_id))
 			.orderBy(desc(blogs.created_at));
-
-		return results.map((blog) => BlogsRepository.parseBlogContent(blog));
+	
+		const blogsWithLikes = await Promise.all(
+			results.map(async (blog) => {
+				const parsedBlog = BlogsRepository.parseBlogContent(blog);
+				const likeCount = await BlogsRepository.getLikeCount(blog.id);
+				return {
+					...parsedBlog,
+					like_count: likeCount,
+				} as Blog;
+			}),
+		);
+	
+		return blogsWithLikes;
 	}
 
 	static async findById(id: number): Promise<Blog | null> {

@@ -1,9 +1,7 @@
 import { betterAuth } from "better-auth";
-import { Pool } from "pg";
-
-const pool = new Pool({
-	connectionString: Bun.env.DATABASE_URL!,
-});
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "../db/index";
+import * as schema from "../db/schema";
 
 const getTrustedOrigins = (): string[] => {
 	const origins = Bun.env.AUTH_TRUSTED_ORIGINS;
@@ -18,7 +16,10 @@ const getTrustedOrigins = (): string[] => {
 };
 
 export const auth = betterAuth({
-	database: pool,
+	database: drizzleAdapter(db, {
+		provider: "pg",
+		schema,
+	}),
 	emailAndPassword: {
 		enabled: true,
 		requireEmailVerification: false,

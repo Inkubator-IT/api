@@ -4,3 +4,4 @@ export { ServicesService } from "./services.service";
 export { ProjectsService } from "./projects.service";
 export { BlogsService } from "./blogs.service";
 export { ClientInformationService } from "./client-information.service";
+export { TestimonialsService } from "./testimonials.service";

@@ -118,6 +118,18 @@ export async function createTables(): Promise<void> {
 			)
 		`;
 
+    // Create testimonials table
+    await sql`
+			CREATE TABLE IF NOT EXISTS testimonials (
+				id SERIAL PRIMARY KEY,
+				full_name VARCHAR(100) NOT NULL,
+				role VARCHAR(100) NOT NULL,
+				description VARCHAR(500) NOT NULL,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)
+		`;
+
     // Create indexes for better performance
     await sql`CREATE INDEX IF NOT EXISTS idx_projects_tag_id ON projects(tag_id)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_project_tech_stack_project_id ON project_tech_stack(project_id)`;
@@ -136,6 +148,7 @@ export async function createTables(): Promise<void> {
 
 export async function dropTables(): Promise<void> {
   try {
+    await sql`DROP TABLE IF EXISTS testimonials CASCADE`;
     await sql`DROP TABLE IF EXISTS client_information CASCADE`;
     await sql`DROP TABLE IF EXISTS blogs CASCADE`;
     await sql`DROP TABLE IF EXISTS project_tech_stack CASCADE`;

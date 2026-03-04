@@ -9,6 +9,7 @@ import {
 	projectsRoutes,
 	blogsRoutes,
 	clientInformationRoutes,
+	testimonialsRoutes,
 } from "./routes";
 
 const app = new Hono();
@@ -54,6 +55,7 @@ app.route("/api/services", servicesRoutes);
 app.route("/api/projects", projectsRoutes);
 app.route("/api/blogs", blogsRoutes);
 app.route("/api/client-information", clientInformationRoutes);
+app.route("/api/testimonials", testimonialsRoutes);
 
 // Initialize database on startup
 async function initializeDatabase() {

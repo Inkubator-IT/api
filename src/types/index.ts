@@ -138,6 +138,21 @@ export interface CreateServiceRequest {
   service_description: string;
 }
 
+export interface Testimonial {
+  id: number;
+  full_name: string;
+  role: string;
+  description: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface CreateTestimonialRequest {
+  full_name: string;
+  role: string;
+  description: string;
+}
+
 export interface CreateClientInformationRequest {
   nama_lengkap: string;
   email: string;
